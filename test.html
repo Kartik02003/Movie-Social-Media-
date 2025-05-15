@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Information Chatbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .chat-container {
+            height: 500px;
+            transition: all 0.3s ease;
+        }
+
+        .message {
+            max-width: 80%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .bot-message {
+            background-color: #f3f4f6;
+            border-radius: 18px 18px 18px 0;
+        }
+
+        .user-message {
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 18px 18px 0 18px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .typing-indicator span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #9ca3af;
+            margin: 0 2px;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-5px);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-md mx-auto">
+        <div class="bg-white rounded-xl shadow-xl overflow-hidden">
+            <!-- Chat header -->
+            <div class="bg-blue-600 text-white p-4 flex items-center">
+                <div class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center mr-3">
+                    <i class="fas fa-graduation-cap text-white text-xl"></i>
+                </div>
+                <div>
+                    <h2 class="font-bold text-lg">University Assistant</h2>
+                    <p class="text-xs opacity-80">Ask me about admissions, courses, and more</p>
+                </div>
+                <div class="ml-auto flex space-x-2">
+                    <button class="w-3 h-3 rounded-full bg-green-400"></button>
+                    <button class="w-3 h-3 rounded-full bg-yellow-400"></button>
+                    <button class="w-3 h-3 rounded-full bg-red-400"></button>
+                </div>
+            </div>
+
+            <!-- Chat messages container -->
+            <div class="chat-container bg-gray-50 p-4 overflow-y-auto flex flex-col space-y-3" id="chat-messages">
+                <!-- Welcome message -->
+                <div class="message bot-message p-3 self-start">
+                    <p>Hello! I'm your University Assistant. 😊</p>
+                    <p class="mt-1">I can help with:</p>
+                    <ul class="list-disc pl-5 mt-1 space-y-1">
+                        <li>Admission requirements</li>
+                        <li>Course information</li>
+                        <li>Campus facilities</li>
+                        <li>Tuition fees</li>
+                        <li>Scholarships</li>
+                    </ul>
+                    <p class="mt-2">What would you like to know?</p>
+                </div>
+
+                <!-- Sample quick questions -->
+                <div class="flex flex-wrap gap-2 mt-2">
+                    <button onclick="sendQuickQuestion(this)"
+                        class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-full transition">Admission
+                        deadline</button>
+                    <button onclick="sendQuickQuestion(this)"
+                        class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-full transition">Engineering
+                        courses</button>
+                    <button onclick="sendQuickQuestion(this)"
+                        class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-full transition">Campus
+                        tour</button>
+                    <button onclick="sendQuickQuestion(this)"
+                        class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-full transition">Scholarship
+                        info</button>
+                </div>
+            </div>
+
+            <!-- Typing indicator (hidden by default) -->
+            <div id="typing-indicator" class="typing-indicator p-3 hidden">
+                <div class="flex items-center space-x-1">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <!-- Input area -->
+            <div class="bg-white border-t p-3 flex">
+                <input type="text" id="user-input" placeholder="Type your question here..."
+                    class="flex-1 border rounded-l-full py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <button onclick="sendMessage()"
+                    class="bg-blue-600 text-white px-4 rounded-r-full hover:bg-blue-700 transition">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="text-center text-xs text-gray-500 mt-4">
+            <p>University Assistant v1.0 | Data updated: June 2023</p>
+        </div>
+    </div>
+
+    <script>
+        // Knowledge base for the chatbot
+        const knowledgeBase = {
+            "admission": {
+                "deadline": "The admission deadline for the Fall 2023 semester is August 15, 2023. For Spring 2024, it's January 10, 2024.",
+                "requirements": "Admission requirements include: 1) Completed application form, 2) High school transcripts, 3) SAT/ACT scores (optional), 4) Personal statement, 5) Application fee of $50.",
+                "process": "The admission process takes 4-6 weeks after submitting all required documents. You'll receive an email notification once a decision is made."
+            },
+            "courses": {
+                "engineering": "We offer various engineering programs: 1) Computer Engineering (BSc), 2) Mechanical Engineering (BSc), 3) Electrical Engineering (BSc), 4) Civil Engineering (BSc). All programs are ABET accredited.",
+                "business": "Our business school offers: 1) Business Administration (BBA), 2) Finance (BSc), 3) Marketing (BSc), 4) Accounting (BSc). We also have MBA programs.",
+                "arts": "Arts programs include: 1) Fine Arts (BFA), 2) Graphic Design (BFA), 3) Art History (BA), 4) Music (BMus)."
+            },
+            "campus": {
+                "tour": "Campus tours are available Monday-Friday at 10am and 2pm. You can schedule a tour on our website or call (555) 123-4567. Virtual tours are also available online.",
+                "facilities": "Our campus features: 1) Modern classrooms, 2) Research labs, 3) Library with 500,000+ volumes, 4) Sports complex, 5) Student center with dining options.",
+                "housing": "We offer on-campus housing with options for singles, doubles, and suites. The cost ranges from $3,000-$5,000 per semester. Apply by July 1 for Fall semester."
+            },
+            "fees": {
+                "tuition": "Undergraduate tuition is $15,000 per semester for full-time students (12-18 credits). Graduate tuition is $20,000 per semester.",
+                "financial_aid": "Financial aid options include federal grants, loans, and work-study programs. Complete the FAFSA to determine eligibility.",
+                "scholarship": "We offer merit-based scholarships ranging from $2,000-$10,000 per year. The application deadline is March 1 for the following academic year."
+            },
+            "greeting": "Hello! How can I assist you with university information today?",
+            "default": "I'm not sure I understand. Could you rephrase your question or ask about admission, courses, campus, or fees?"
+        };
+
+        // Function to send a message
+        function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const message = userInput.value.trim();
+
+            if (message === '') return;
+
+            // Add user message to chat
+            addMessage(message, 'user');
+            userInput.value = '';
+
+            // Show typing indicator
+            showTyping();
+
+            // Simulate bot thinking
+            setTimeout(() => {
+                hideTyping();
+                const response = generateResponse(message);
+                addMessage(response, 'bot');
+
+                // Scroll to bottom
+                const chatContainer = document.getElementById('chat-messages');
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 1000 + Math.random() * 2000);
+        }
+
+        // Function to send quick question
+        function sendQuickQuestion(button) {
+            const question = button.textContent;
+            document.getElementById('user-input').value = question;
+            sendMessage();
+        }
+
+        // Function to add a message to the chat
+        function addMessage(text, sender) {
+            const chatContainer = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+
+            messageDiv.classList.add('message', 'p-3', 'self-start');
+            if (sender === 'user') {
+                messageDiv.classList.add('user-message', 'self-end');
+            } else {
+                messageDiv.classList.add('bot-message');
+            }
+
+            messageDiv.innerHTML = `<p>${text}</p>`;
+            chatContainer.appendChild(messageDiv);
+
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Function to show typing indicator
+        function showTyping() {
+            document.getElementById('typing-indicator').classList.remove('hidden');
+
+            // Scroll to bottom
+            const chatContainer = document.getElementById('chat-messages');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Function to hide typing indicator
+        function hideTyping() {
+            document.getElementById('typing-indicator').classList.add('hidden');
+        }
+
+        // Function to generate a response
+        function generateResponse(message) {
+            message = message.toLowerCase();
+
+            // Check for greetings
+            if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+                return knowledgeBase.greeting;
+            }
+
+            // Check for admission queries
+            if (message.includes('admission')) {
+                if (message.includes('deadline') || message.includes('when') || message.includes('date')) {
+                    return knowledgeBase.admission.deadline;
+                } else if (message.includes('requirement') || message.includes('need') || message.includes('document')) {
+                    return knowledgeBase.admission.requirements;
+                } else if (message.includes('process') || message.includes('time') || message.includes('long')) {
+                    return knowledgeBase.admission.process;
+                }
+                return "For admission information, you can ask about: deadlines, requirements, or the application process.";
+            }
+
+            // Check for course queries
+            if (message.includes('course') || message.includes('program') || message.includes('major') || message.includes('study')) {
+                if (message.includes('engineer')) {
+                    return knowledgeBase.courses.engineering;
+                } else if (message.includes('business') || message.includes('commerce') || message.includes('busi')) {
+                    return knowledgeBase.courses.business;
+                } else if (message.includes('art') || message.includes('design') || message.includes('music')) {
+                    return knowledgeBase.courses.arts;
+                }
+                return "We offer programs in engineering, business, and arts. Which field are you interested in?";
+            }
+
+            // Check for campus queries
+            if (message.includes('campus') || message.includes('facility') || message.includes('tour') || message.includes('housing')) {
+                if (message.includes('tour') || message.includes('visit')) {
+                    return knowledgeBase.campus.tour;
+                } else if (message.includes('facility') || message.includes('library') || message.includes('lab') || message.includes('sport')) {
+                    return knowledgeBase.campus.facilities;
+                } else if (message.includes('housing') || message.includes('dorm') || message.includes('live') || message.includes('accommodation')) {
+                    return knowledgeBase.campus.housing;
+                }
+                return "For campus information, you can ask about: tours, facilities, or housing options.";
+            }
+
+            // Check for fee queries
+            if (message.includes('fee') || message.includes('tuition') || message.includes('cost') || message.includes('price') || message.includes('scholarship') || message.includes('financial aid')) {
+                if (message.includes('tuition') || message.includes('fee') || message.includes('cost') || message.includes('price')) {
+                    return knowledgeBase.fees.tuition;
+                } else if (message.includes('financial aid') || message.includes('fafsa') || message.includes('loan') || message.includes('grant')) {
+                    return knowledgeBase.fees.financial_aid;
+                } else if (message.includes('scholarship') || message.includes('funding') || message.includes('award')) {
+                    return knowledgeBase.fees.scholarship;
+                }
+                return "For financial information, you can ask about: tuition fees, financial aid, or scholarships.";
+            }
+
+            // Default response
+            return knowledgeBase.default;
+        }
+
+        // Allow sending message with Enter key
+        document.getElementById('user-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+
+</html>

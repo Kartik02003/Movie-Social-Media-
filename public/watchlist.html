@@ -1,0 +1,531 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Movfix - Online Movies & TV Shows Template</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="shortcut icon" type="image/x-icon" href="img/favicon.png">
+    <!-- Place favicon.ico in the root directory -->
+
+    <!-- CSS here -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/odometer.css">
+    <link rel="stylesheet" href="css/aos.css">
+    <link rel="stylesheet" href="css/slick.css">
+    <link rel="stylesheet" href="css/default.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <style>
+        .profile-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        .btn-logout {
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .btn-logout:hover {
+            background: darkred;
+        }
+
+        /* Ensure uniform size for all watchlist items */
+        .blog-post-item {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            border-radius: 10px;
+            /* Optional: Adds rounded corners */
+        }
+
+        /* Image Styling */
+        .blog-post-thumb {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .blog-post-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Ensures images are the same size without distortion */
+            transition: transform 0.3s ease;
+        }
+
+        /* Zoom effect on hover */
+        .blog-post-item:hover .blog-post-thumb img {
+            transform: scale(1.05);
+        }
+
+        /* Overlay content styling */
+        .blog-post-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0));
+            /* Stronger gradient for better readability */
+            color: white;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            min-height: 180px;
+            /* Ensures content remains uniform */
+        }
+
+        /* Make content appear on hover */
+        .blog-post-item:hover .blog-post-content {
+            opacity: 1;
+        }
+
+        .blog-post-item:hover .delete-icon {
+            opacity: 1;
+        }
+
+        /* Ensures "Watch Now" button stays at the bottom */
+        .read-more {
+            margin-top: auto;
+        }
+
+        .delete-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            opacity: 0;
+            cursor: pointer;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .delete-icon:hover {
+            transform: scale(1.1);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- preloader -->
+    <div id="preloader">
+        <div id="loading-center">
+            <div id="loading-center-absolute">
+                <img src="img/preloader.svg" alt="">
+            </div>
+        </div>
+    </div>
+    <!-- preloader-end -->
+
+    <!-- Scroll-top -->
+    <button class="scroll-top scroll-to-target" data-target="html">
+        <i class="fas fa-angle-up"></i>
+    </button>
+    <!-- Scroll-top-end-->
+
+    <!-- header-area -->
+    <header>
+        <div id="sticky-header" class="menu-area transparent-header">
+            <div class="container custom-container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mobile-nav-toggler"><i class="fas fa-bars"></i></div>
+                        <div class="menu-wrap">
+                            <nav class="menu-nav show">
+                                <div class="logo">
+                                    <a href="index.html">
+                                        <img src="img/logo/logo.png" alt="Logo">
+                                    </a>
+                                </div>
+                                <div class="navbar-wrap main-menu d-none d-lg-flex">
+                                    <ul class="navigation">
+                                        <li class="active menu-item-has-children"><a href="#">Home</a>
+                                        </li>
+                                        <li class="menu-item-has-children"><a href="#">Movie</a>
+
+                                        </li>
+                                        <li><a href="tvShow.html">tv show</a></li>
+                                        <!-- <li><a href="pricing.html">Pricing</a></li>
+                                        <li class="menu-item-has-children"><a href="#">blog</a>
+                                            <ul class="submenu">
+                                                <li><a href="blog.html">Our Blog</a></li>
+                                                <li><a href="blog-details.html">Blog Details</a></li>
+                                            </ul>
+                                        </li> -->
+                                        <li><a href="contact.html">contacts</a></li>
+                                    </ul>
+                                </div>
+                                <div class="header-action d-none d-md-block">
+                                    <ul>
+                                        <!-- Search Icon -->
+                                        <li class="header-search">
+                                            <a href="#" data-toggle="modal" data-target="#search-modal">
+                                                <i class="fas fa-search"></i>
+                                            </a>
+                                        </li>
+
+                                        <!-- User Profile (Replaces Language Dropdown) -->
+                                        <li class="header-profile" id="userProfile" style="display: none;">
+                                            <img id="profilePic" src="img/default-avatar.png" alt="Profile"
+                                                class="profile-img">
+
+                                        </li>
+
+                                        <!-- Sign In Button (Only visible if not logged in) -->
+                                        <li class="header-btn">
+                                            <a href="#" id="logoutBtn" class="btn">Log out</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </nav>
+                        </div>
+
+                        <!-- Mobile Menu  -->
+                        <div class="mobile-menu">
+                            <div class="close-btn"><i class="fas fa-times"></i></div>
+
+                            <nav class="menu-box">
+                                <div class="nav-logo"><a href="index.html"><img src="img/logo/logo.png" alt=""
+                                            title=""></a>
+                                </div>
+                                <div class="menu-outer">
+                                    <!--Here Menu Will Come Automatically Via Javascript / Same Menu as in Header-->
+                                </div>
+                                <div class="social-links">
+                                    <ul class="clearfix">
+                                        <li><a href="#"><span class="fab fa-twitter"></span></a></li>
+                                        <li><a href="#"><span class="fab fa-facebook-square"></span></a></li>
+                                        <li><a href="#"><span class="fab fa-pinterest-p"></span></a></li>
+                                        <li><a href="#"><span class="fab fa-instagram"></span></a></li>
+                                        <li><a href="#"><span class="fab fa-youtube"></span></a></li>
+                                    </ul>
+                                </div>
+                            </nav>
+                        </div>
+                        <div class="menu-backdrop"></div>
+                        <!-- End Mobile Menu -->
+
+                        <!-- Modal Search -->
+                        <!-- Search Modal -->
+                        <div class="modal fade" id="search-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+
+                                    <!-- Search Bar -->
+                                    <div class="search-header">
+                                        <form id="searchForm">
+                                            <input type="text" id="searchInput" placeholder="Search movies..." required>
+                                            <button type="submit"><i class="fas fa-search"></i></button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Search Results -->
+                                    <div id="searchResults">
+                                        <div id="searchResultsGrid" class="results-grid">
+                                            <!-- Search results will be dynamically added here -->
+                                        </div>
+                                    </div>
+
+                                    <!-- Pagination Controls -->
+                                    <div class="pagination-container" id="pagination-container" style="display: none;">
+                                        <button id="prevPageBtn" disabled>Previous</button>
+                                        <span id="pageIndicator">Page 1</span>
+                                        <button id="nextPageBtn">Next</button>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <!-- Modal Search-end -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- header-area-end -->
+
+
+    <!-- main-area -->
+    <main>
+
+        <!-- breadcrumb-area -->
+        <section class="breadcrumb-area breadcrumb-bg" data-background="img/bg/breadcrumb_bg.jpg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="breadcrumb-content">
+                            <h2 class="title">News Update</h2>
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">Watchlist</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Blog Page</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- breadcrumb-area-end -->
+
+        <!-- blog-area -->
+        <section class="blog-area blog-bg" data-background="img/bg/watchlist_bg.jpg">
+            <div class="container">
+                <div class="row">
+                    <!-- Watchlist Section (Main Content) -->
+                    <div class="col-lg-8">
+                        <div class="row" id="watchlistContainer">
+                            <div class="col-lg-4 col-md-6">
+                                <div class="blog-post-item">
+                                    <div class="blog-post-thumb">
+                                        <a href="watch-details.html">
+                                            <img src="img/images/default-poster.jpg" alt="Movie 1">
+                                        </a>
+                                        <div class="blog-post-content">
+                                            <h4 class="title"><a href="watch-details.html">The Dark Journey</a></h4>
+                                            <span class="date"><i class="far fa-calendar-alt"></i> 15 Mar 2023</span>
+                                            <p>Genre: Action, Thriller</p>
+                                            <p><i class="far fa-star"></i> 8.5/10</p>
+                                            <div class="read-more">
+                                                <a href="watch-details.html">Watch Now <i class="fas fa-play"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-4 col-md-6">
+                                <div class="blog-post-item">
+                                    <div class="blog-post-thumb">
+                                        <a href="watch-details.html"><img src="img/watchlist/movie2.jpg"
+                                                alt="Movie 2"></a>
+                                    </div>
+                                    <div class="blog-post-content">
+                                        <h4 class="title"><a href="watch-details.html">Echoes of the Past</a></h4>
+                                        <span class="date"><i class="far fa-calendar-alt"></i> 20 Jan 2022</span>
+                                        <p>Genre: Drama, Mystery</p>
+                                        <p><i class="far fa-star"></i> 7.8/10</p>
+                                        <div class="read-more">
+                                            <a href="watch-details.html">Watch Now <i class="fas fa-play"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6">
+                                <div class="blog-post-item">
+                                    <div class="blog-post-thumb">
+                                        <a href="watch-details.html"><img src="img/watchlist/movie3.jpg"
+                                                alt="Movie 3"></a>
+                                    </div>
+                                    <div class="blog-post-content">
+                                        <h4 class="title"><a href="watch-details.html">Lost in Space</a></h4>
+                                        <span class="date"><i class="far fa-calendar-alt"></i> 8 Jul 2021</span>
+                                        <p>Genre: Sci-Fi, Adventure</p>
+                                        <p><i class="far fa-star"></i> 8.2/10</p>
+                                        <div class="read-more">
+                                            <a href="watch-details.html">Watch Now <i class="fas fa-play"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="pagination-wrap mt-60">
+                            <nav>
+                                <ul>
+
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="col-lg-4">
+                        <aside class="blog-sidebar">
+                            <div class="widget blog-widget">
+                                <div class="widget-title mb-30">
+                                    <h5 class="title">Categories</h5>
+                                </div>
+                                <div class="sidebar-cat">
+                                    <ul>
+                                        <li><a href="#">Action</a> <span>0</span></li>
+                                        <li><a href="#">Thriller</a> <span>0</span></li>
+                                        <li><a href="#">Drama</a> <span>0</span></li>
+                                        <li><a href="#">Sci-Fi</a> <span>0</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="widget blog-widget">
+                                <div class="widget-title mb-30">
+                                    <h5 class="title">Recently Added</h5>
+                                </div>
+                                <div class="rc-post">
+                                    <ul>
+                                        <li class="rc-post-item">
+
+                                            <div class="content">
+                                                <h5 class="title"><a href="watch-details.html">Nothing to Display</a>
+                                                </h5>
+                                                <span class="date"> Add to
+                                                    Watchlist</span>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- blog-area-end -->
+
+
+
+        <!-- newsletter-area -->
+
+        <!-- newsletter-area-end -->
+
+    </main>
+    <!-- main-area-end -->
+
+
+    <!-- footer-area -->
+    <footer>
+        <div class="footer-top-wrap">
+            <div class="container">
+                <div class="footer-menu-wrap">
+                    <div class="row align-items-center">
+                        <div class="col-lg-3">
+                            <div class="footer-logo">
+                                <a href="index.html"><img src="img/logo/logo.png" alt=""></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="footer-menu">
+                                <nav>
+                                    <ul class="navigation">
+                                        <li><a href="index.html">Home</a></li>
+                                        <li><a href="index.html">Movie</a></li>
+                                        <li><a href="index.html">tv show</a></li>
+                                        <li><a href="index.html">pages</a></li>
+                                        <li><a href="pricing.html">Pricing</a></li>
+                                    </ul>
+                                    <div class="footer-search">
+                                        <form action="#">
+                                            <input type="text" placeholder="Find Favorite Movie">
+                                            <button><i class="fas fa-search"></i></button>
+                                        </form>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-quick-link-wrap">
+                    <div class="row align-items-center">
+                        <div class="col-md-7">
+                            <div class="quick-link-list">
+                                <ul>
+                                    <li><a href="#">FAQ</a></li>
+                                    <li><a href="#">Help Center</a></li>
+                                    <li><a href="#">Terms of Use</a></li>
+                                    <li><a href="#">Privacy</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="footer-social">
+                                <ul>
+                                    <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                    <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                    <li><a href="#"><i class="fab fa-pinterest-p"></i></a></li>
+                                    <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright-wrap">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="copyright-text">
+                            <p>Copyright &copy; 2021. All Rights Reserved By <a href="index.html">Movflx</a></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="payment-method-img text-center text-md-right">
+                            <img src="img/images/card_img.png" alt="img">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- footer-area-end -->
+
+
+
+
+
+    <!-- JS here -->
+    <script src="js/vendor/jquery-3.6.0.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/isotope.pkgd.min.js"></script>
+    <script src="js/imagesloaded.pkgd.min.js"></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.odometer.min.js"></script>
+    <script src="js/jquery.appear.js"></script>
+    <script src="js/slick.min.js"></script>
+    <script src="js/ajax-form.js"></script>
+    <script src="js/wow.min.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/scripts/watchlist.js" type="module"></script>
+</body>
+
+</html>

@@ -1,0 +1,41 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // 🔹 Secure Chat Collection
+    match /chats/{chatId} {
+      allow read, write: if request.auth != null; // Allow only authenticated users
+
+      // Prevent deletion of the entire chat document
+      allow delete: if false;
+    }
+
+    // 🔹 Secure Messages inside a Chat Room
+    match /chats/{chatId}/messages/{messageId} {
+      allow read: if request.auth != null; // Allow authenticated users to read messages
+
+      // Allow users to send messages only if they are authenticated
+      allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
+
+      // Prevent message updates & deletion (for chat history integrity)
+      allow update, delete: if false;
+    }
+
+    // 🔹 Secure Users Collection
+    match /users/{userId} {
+      allow read: if request.auth != null; // Any authenticated user can read
+
+      // Allow users to update their own profile, but not change UID
+      allow update: if request.auth != null && request.auth.uid == userId &&
+                    !(request.resource.data.keys().hasAny(['uid']));
+
+      // Allow users to create a profile only if the document ID matches their UID
+      allow create: if request.auth != null && request.auth.uid == userId;
+      
+      // Prevent users from deleting their own document
+      allow delete: if false;
+    }
+  }
+}
+  
